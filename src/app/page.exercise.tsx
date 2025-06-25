@@ -1,7 +1,7 @@
 // 🐶 importe le composant ModeToggle  '@/components/theme-toggle'
 import Image from 'next/image'
 import Link from 'next/link'
-
+import {ModeToggle} from '@/components/theme-toggle'
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -19,13 +19,21 @@ export default function Home() {
             <Image
               src="/NEXT-MASTERY-dark.png"
               alt="Vercel Logo"
-              className=""
+              className="hidden dark:block"
+              width={40}
+              height={24}
+              priority
+            />
+            <Image
+              src="/NEXT-MASTERY-light.png"
+              alt="Vercel Logo"
+              className="block dark:hidden"
               width={40}
               height={24}
               priority
             />
           </Link>
-          {/* 🐶 Ajouter le composant ModeToggle */}
+          <ModeToggle />
         </div>
       </div>
 

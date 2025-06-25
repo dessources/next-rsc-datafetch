@@ -2,9 +2,8 @@ import React from 'react'
 import type {Metadata} from 'next'
 import {Inter as FontSans} from 'next/font/google'
 import './globals.css'
-// 🐶 importe `ThemeProvider` et `cn`
-// 🤖
-// import {ThemeProvider} from '@/components/theme-provider'
+
+import {ThemeProvider} from '@/components/theme-provider'
 // import {cn} from '@/lib/utils'
 
 const fontSans = FontSans({
@@ -26,14 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fontSans.variable}>
-        {/* 🐶 wrap {children} du theme provider  
         <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          > */}
-        {children}
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
