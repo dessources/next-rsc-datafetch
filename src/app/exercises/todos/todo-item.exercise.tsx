@@ -13,7 +13,7 @@ export default function TodoItem({todo}: {todo: Todo}) {
         <Checkbox
           checked={todo.isCompleted}
           id={`${todo.id}`}
-          onCheckedChange={(checked) => handleChange(checked as boolean)}
+          onCheckedChange={(check) => handleChange(check as boolean)}
         />
         <label
           className={cn('flex-1 text-sm font-medium', {

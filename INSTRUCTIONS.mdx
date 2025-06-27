@@ -82,7 +82,6 @@ const Page = async () => {
 import {addTodo as addTodoDao} from '@/db/sgbd'
 //insertion
 addTodoDao(todo) //
-
 ```
 
 Pour simplifier l’exercice, les vues sont déjà créées : `todos-view` et `todo-item`.
@@ -124,9 +123,9 @@ const randomError = true
 Avec `sonner` , il est possible d’afficher des toasts d’erreur grâce à :
 
 ```tsx
- import {toast} from 'sonner'
- //
- toast.error(`Une erreur est survenue`)
+import {toast} from 'sonner'
+//
+toast.error(`Une erreur est survenue`)
 ```
 
 🐶 Dans cet exercice, tu vas devoir gérer 2 types d’erreurs.
@@ -143,7 +142,7 @@ Fichiers
 🐶 Dans cet exercice, tu vas devoir implémenter la mise à jour de la tâche (completed ou non). Pour cela, tu as à ta disposition une fonction `updateTodo` qui met à jour la base de données.
 
 ```tsx
-import {updateTodo as  updateTodoDao} from '@/db/sgbd'
+import {updateTodo as updateTodoDao} from '@/db/sgbd'
 //mise à jour
 updateTodoDao(todo) //
 ```
@@ -151,17 +150,15 @@ updateTodoDao(todo) //
 Tu as également à ta disposition `todo-item`, un component qui contient une `Checkbox`
 
 ```tsx
-   const handleChange = async (isCompleted: boolean) => {
-    console.log('isCompleted', isCompleted)
-  }
+const handleChange = async (isCompleted: boolean) => {
+  console.log('isCompleted', isCompleted)
+}
 
- <Checkbox
-    checked={todo.isCompleted}
-    id={`${todo.id}`}
-    onCheckedChange={(checked) => handleChange(checked as boolean)}
-  />
-
-
+;<Checkbox
+  checked={todo.isCompleted}
+  id={`${todo.id}`}
+  onCheckedChange={(checked) => handleChange(checked as boolean)}
+/>
 ```
 
 - 🐶 Dans un premier temps, crée le server action `updateTodo`
@@ -209,8 +206,8 @@ Fichiers
 Il te fournit la `Regex` suivante :
 
 ```tsx
-const titlePattern = /^[A-Z][A-Za-z0-9 _-]{2,49}$/;
-const titlePattern = new RegExp(titlePattern);
+const titlePattern = /^[A-Z][A-Za-z0-9 _-]{2,49}$/
+const titlePattern = new RegExp(titlePattern)
 !pattern.test(todo.title)
 ```
 
@@ -221,20 +218,20 @@ Il souhaite que la `Regex` puisse être passée depuis le client et exécutée d
 ```tsx
 //CLIENT CODE
 const handleChange = async (isCompleted: boolean) => {
-    const pattern = /^[A-Z][\w -]{2,49}$/
-    const regex = new RegExp(pattern)
-    try {
-      await updateTodoAction(
-        {
-          ...todo,
-          isCompleted,
-        },
-        regex
-      )
-    } catch (error) {
-      toast.error(`Failed to update todo.${error}`)
-    }
+  const pattern = /^[A-Z][\w -]{2,49}$/
+  const regex = new RegExp(pattern)
+  try {
+    await updateTodoAction(
+      {
+        ...todo,
+        isCompleted,
+      },
+      regex
+    )
+  } catch (error) {
+    toast.error(`Failed to update todo.${error}`)
   }
+}
 //SERVER ACTION
 export const updateTodo = async (todo: Todo, reg: RegExp) => {
   if (!reg.test(todo.title)) {
