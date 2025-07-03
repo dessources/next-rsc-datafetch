@@ -1,10 +1,10 @@
 'use client'
 import {Input} from '@/components/ui/input'
 import {Button} from '@/components/ui/button'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import {addTodo as addTodoAction} from './actions'
 import TodoItem from './todo-item'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 import {toast} from 'sonner'
 import {AddTodo, Todo} from '@/lib/type'
 import React from 'react'
@@ -21,13 +21,23 @@ export default function Todos({todos}: TodosProps) {
   const [inputValue, setInputValue] = React.useState('')
 
   const handleClick = async () => {
-    await addTodo({
-      title: inputValue,
-      isCompleted: false,
-      updadtedAt: new Date().toISOString(),
-    })
-    // 🐶 Affiche un `toast` avec `Sonner`
-    toast('Todo has been created.')
+    try {
+      if (!inputValue) {
+        toast('Veuillez renseigner une valeur pour votre Todo')
+        return
+      }
+      await addTodo({
+        title: inputValue,
+        isCompleted: false,
+        updadtedAt: new Date().toISOString(),
+      })
+
+      // 🐶 Affiche un `toast` avec `Sonner`
+      toast('Todo has been created.')
+    } catch (error) {
+      toast.error('Une erreur est survenue, Essayez à nouveau')
+      console.error(error)
+    }
   }
 
   return (

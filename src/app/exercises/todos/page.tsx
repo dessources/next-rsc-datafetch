@@ -1,7 +1,7 @@
 import {getTodos} from '@/db/sgbd'
 import Todos from './todos-view'
 
-export const revalidate = 3600
+export const revalidate = 15
 const Page = async () => {
   const todos = await getTodos()
   return (
