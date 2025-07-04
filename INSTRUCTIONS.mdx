@@ -109,18 +109,18 @@ De telle manière que nous puissions utiliser :
 
 ```tsx
 const handleChange = async (isCompleted: boolean) => {
-    updateOptimisticTodo({isCompleted, sending: true})
-    try {
-      await updateTodoAction({
-        ...todo,
-        isCompleted,
-      })
-    } catch (error) {
-      toast.error(`Failed to update todo.${error}`)
-    } finally {
-      updateOptimisticTodo({isCompleted, sending: false})
-    }
+  updateOptimisticTodo({isCompleted, sending: true})
+  try {
+    await updateTodoAction({
+      ...todo,
+      isCompleted,
+    })
+  } catch (error) {
+    toast.error(`Failed to update todo.${error}`)
+  } finally {
+    updateOptimisticTodo({isCompleted, sending: false})
   }
+}
 ```
 
 Dans le cas précis, nous n’utilisons pas un type `Todo` car nous avons un champs supplémentaire (`sending`) .
