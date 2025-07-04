@@ -1,4 +1,5 @@
 'use client'
+import {startTransition, useActionState} from 'react'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Textarea} from '@/components/ui/textarea'
@@ -23,16 +24,12 @@ import {
 import React from 'react'
 import {CategoriesEnum, Product} from '@/lib/type'
 
-//🐶 Remplace cet import par `onSubmitAction`
-import {persistProduct} from '../actions'
+import {onSubmitAction} from '../actions'
 import {toast} from 'sonner'
 import {FormSchemaType, formSchema} from '../schema'
 
 export default function ProductForm({product}: {product?: Product}) {
-  // 🐶 Utilise le Hook 'useActionState' avec 'onSubmitAction'
-  // et initilise le `state` par défaut
-  // {success:true}
-  // 🤖 const [state, formAction] = useActionState
+  const [state, formAction] = useActionState(onSubmitAction, {success: true})
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,19 +61,14 @@ export default function ProductForm({product}: {product?: Product}) {
 
   async function handleSubmitAction(values: FormSchemaType) {
     // ⛏️ Supprime tout ce code et remplace le par un appel à `formAction(formData)`
-    const isUpdate = values.id ? true : false
-    try {
-      await persistProduct(values)
-      toast(isUpdate ? 'Product updated' : 'Product added')
-    } catch (error) {
-      console.error(error)
-      toast.error('Error while saving product')
-    }
-    // 🐶 Crée une nouvelle instance de `FormData` (le paramètre d'entrée de `formAction`)
-    // 🤖 const formData = new FormData()
-    // 🐶 Ajoute les valeurs de `values` à `formData` en passant par `append`
-    // 📑 https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
-    // 🐶 Appelle `formAction` avec `formData` (pense a wraper dans startTransition(() => formAction(formData)))
+
+    const formData = new FormData()
+    console.log(values)
+    const entries = Object.entries(values).forEach(
+      ([key, value]: [string, any]) => formData.append(key, value)
+    )
+
+    startTransition(() => formAction(formData))
   }
 
   // 🐶 Tu vas devoir maintenant gérer les erreurs retournées par le server action
@@ -86,21 +78,19 @@ export default function ProductForm({product}: {product?: Product}) {
   // 🐶 Utilise `state.message` pour afficher un `toast` d'erreur
   // 🐶 Pense à reset le formulaire en cas de succès
   React.useEffect(() => {
-    const success = true // Remplace true par `state.success`
+    const success = state.success // Remplace true par `state.success`
     if (success) {
-      // 🐶Affiche un `toast` `Product saved`
-      // 🐶Reset le formulaire
+      toast.success(state.message)
+      form.reset()
     } else {
-      // 🐶 Indique à RHF les champs en errors
-      // 🤖
-      // for (const error of state?.errors ?? []) {
-      //   form.setError(error.field, {type: 'manual', message: error.message})
-      // }
+      for (const error of state?.errors ?? []) {
+        form.setError(error.field, {type: 'manual', message: error.message})
+      }
       // 🐶 Affiche un `toast` d'erreur
-      //toast.error(state.message ?? 'Error')
+      toast.error(state.message ?? 'Error')
     }
     // 🐶 N'oublie pas les dépendances
-  }, [form])
+  }, [form, state])
 
   return (
     <Form {...form}>

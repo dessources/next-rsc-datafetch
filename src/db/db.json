@@ -25,6 +25,26 @@
       "category": "furniture",
       "createdAt": "2024-04-25T05:56:06.593Z",
       "updadtedAt": "2024-10-30T10:16:40.902Z"
+    },
+    {
+      "id": "3",
+      "title": "test",
+      "price": 343,
+      "description": "description",
+      "category": "bags",
+      "quantity": 10,
+      "createdAt": "2025-07-04T22:38:26.714Z",
+      "updadtedAt": "2025-07-04T22:41:37.253Z"
+    },
+    {
+      "id": "4",
+      "title": "Iphone15",
+      "price": 499,
+      "description": "ipohne",
+      "category": "lighting",
+      "quantity": 10,
+      "createdAt": "2025-07-04T22:38:26.714Z",
+      "updadtedAt": "2025-07-04T22:45:49.132Z"
     }
   ],
   "todos": [
