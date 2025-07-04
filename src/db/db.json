@@ -25,6 +25,26 @@
       "category": "furniture",
       "createdAt": "2024-04-25T05:56:06.593Z",
       "updadtedAt": "2024-10-30T10:06:58.759Z"
+    },
+    {
+      "id": "3",
+      "title": "ffff",
+      "price": 3,
+      "description": "dfdfaf",
+      "category": "lighting",
+      "quantity": 3,
+      "createdAt": "2025-07-04T03:52:20.720Z",
+      "updadtedAt": "2025-07-04T03:52:55.878Z"
+    },
+    {
+      "id": "4",
+      "title": "test",
+      "price": 1,
+      "description": "this",
+      "category": "furniture",
+      "quantity": 3,
+      "createdAt": "2025-07-04T03:53:11.177Z",
+      "updadtedAt": "2025-07-04T03:53:42.345Z"
     }
   ],
   "todos": [

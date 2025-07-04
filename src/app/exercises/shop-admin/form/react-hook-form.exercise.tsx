@@ -1,4 +1,5 @@
 'use client'
+import {useEffect} from 'react'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Textarea} from '@/components/ui/textarea'
@@ -21,71 +22,67 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import {CategoriesEnum, Product} from '@/lib/type'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {CategoriesEnum} from '@/lib/type'
 import {persistProduct as persistProductAction} from '../actions'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {toast} from 'sonner'
-import z from 'zod'
-
+import z, {coerce, infer} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 // 🐶 Crée un schéma zod définissant les champs du formulaire
 export const formSchema = z.object({
-  // id: // 🐶 string,
-  // createdAt: // 🐶 string
-  // quantity: // 🐶 Force la convertion en number avec `coerce`
-  // category: // 🐶 Utilise 🤖 `z.nativeEnum`
-  // price: // 🐶 Force la convertion en number avec `coerce`
-  // 🐶  Définis `title` en string min 2 avec un message d'erreur `custom`
-  // 🤖
-  // title: z.string().min(2, {
-  //   message: 'Title must be at least 2 characters.',
-  // }),
-  // description: z.string().min(2, {
-  //   message: 'Description must be at least 2 characters.',
-  // }),
+  id: z.string(),
+  createdAt: z.string(),
+  quantity: coerce.number(),
+  category: z.nativeEnum(CategoriesEnum),
+  price: coerce.number(),
+  title: z.string().min(2, {
+    message: 'Title must be at least 2 characters.',
+  }),
+  description: z.string().min(2, {
+    message: 'Description must be at least 2 characters.',
+  }),
 })
+type Product = z.infer<typeof formSchema>
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function ProductForm({product}: {product?: Product}) {
   const form = useForm<Product>({
     // 🐶 Applique le `ZodResolver`
-    // resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema),
     // 🐶 Définis les valeurs par défault de `Product`
-    // defaultValues: {
-    //   id: product?.id ?? '',
-    //   createdAt: product?.createdAt ?? new Date().toISOString(),
-    //   quantity: product?.quantity ?? 0,
-    //   category: product?.category ?? CategoriesEnum.default,
-    //   title: product?.title ?? '',
-    //   description: product?.description ?? '',
-    //   price: product?.price ?? 0,
-    // },
+    defaultValues: {
+      id: product?.id ?? '',
+      createdAt: product?.createdAt ?? new Date().toISOString(),
+      quantity: product?.quantity ?? 0,
+      category: product?.category ?? CategoriesEnum.default,
+      title: product?.title ?? '',
+      description: product?.description ?? '',
+      price: product?.price ?? 0,
+    },
   })
 
-  // 🐶 Utilise `useEffect` pour mettre en jour `product` en cas de nouveau `prop product`
-  // React.useEffect(() => {
-  //   form.reset({
-  //     id: product?.id ?? '',
-  //     createdAt: product?.createdAt ?? new Date().toISOString(),
-  //     quantity: product?.quantity ?? 10,
-  //     category: product?.category ?? CategoriesEnum.default,
-  //     title: product?.title ?? '',
-  //     description: product?.description ?? '',
-  //     price: product?.price ?? 0,
-  //   })
-  // }, [form, product]) //
-
+  useEffect(() => {
+    form.reset({
+      id: product?.id ?? '',
+      createdAt: product?.createdAt ?? new Date().toISOString(),
+      quantity: product?.quantity ?? 0,
+      category: product?.category ?? CategoriesEnum.default,
+      title: product?.title ?? '',
+      description: product?.description ?? '',
+      price: product?.price ?? 0,
+    })
+  }, [form, product])
   const categories = Object.keys(CategoriesEnum).filter((key) =>
     Number.isNaN(Number(key))
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(values: Product) {
     // 🐶 Appelle `persistProductAction` le server action qui ADD/UPDATE un produit
-    // const isUpdate = values.id ? true : false
-    // persistProductAction(values)
-    // toast(isUpdate ? 'Product updated' : 'Product added')
-    // 🐶 Uitilise `try` `catch` pour gérer les erreurs
+    const isUpdate = values.id ? true : false
+    try {
+      await persistProductAction(values)
+      toast(isUpdate ? 'Product updated' : 'Product added')
+    } catch (error) {
+      toast('Une erreur est survenue')
+    }
   }
   return (
     // 🐶 Utilise le composant `Form` pour englober le formulaire
@@ -94,7 +91,7 @@ export default function ProductForm({product}: {product?: Product}) {
     <Form {...form}>
       {/*  🐶 Ajoute la soumission du `form`
            🤖 onSubmit={form.handleSubmit(onSubmit)} */}
-      <form className="grid gap-4">
+      <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="title"
